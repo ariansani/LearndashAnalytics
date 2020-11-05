@@ -184,7 +184,7 @@ if(!function_exists('generatePageOverview')){
 	<body>
 	
 		<!--START OF USER CHART-->
-		<div id="container" style="width: 50%; display:inline-block; float:left;">
+		<!--<div id="container" style="width: 50%; display:inline-block; float:left;">
 		<canvas id="courseChart"></canvas>
 		</div>
 		<div style ="width:50%; float:right;height:425px;"> 
@@ -194,7 +194,7 @@ if(!function_exists('generatePageOverview')){
 		let courseCount = [];
 			
 				jQuery.ajax({
-        url: "<?php echo plugin_dir_url(__DIR__).'Assests/chartData/sqlQuery_GetCoursesBISA.php'; ?>" ,
+        url: "<?php// echo plugin_dir_url(__DIR__).'Assests/chartData/sqlQuery_GetCoursesBISA.php'; ?>" ,
         method: 'GET'
     	}).done(function (data) {
 				var dataJson = JSON.parse(data);
@@ -205,7 +205,7 @@ if(!function_exists('generatePageOverview')){
 				courseCount = new Array(courseList.length).fill(0);
 				
 				jQuery.ajax({
-					url: "<?php echo plugin_dir_url(__DIR__).'Assests/chartData/sqlQuery.php'; ?>",
+					url: "<?php// echo plugin_dir_url(__DIR__).'Assests/chartData/sqlQuery.php'; ?>",
 					method:'GET'
 				}).done(function(data){
 					var userJson = JSON.parse(data);
@@ -324,13 +324,13 @@ if(!function_exists('generatePageOverview')){
 		
 		
 		
-		</script>
+		</script>-->
 		<!--END OF USER CHART-->
 	
 
-	<span class="content" >
+	<!--<span class="content" >
 		<div class="wrapper" style="width:50%; float:right;"><canvas id="chart-0"></canvas></div>
-	</span>
+	</span>-->
 	
 	<script>
 

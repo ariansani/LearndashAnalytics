@@ -204,7 +204,6 @@ if(!function_exists('generatePageReports')){
 				};
 			courseDatasets.push(newDataset);
 			}
-
 					
 		var container = jQuery('<div/>').insertBefore(table.table().container());
 					
@@ -247,8 +246,8 @@ if(!function_exists('generatePageReports')){
     series: courseDatasets
 });
 		 // On each draw, update the data in the chart
-   // table.on('draw', function () {
-    //    chart.series[0].setData(chartData(table));
+   //table.on('draw', function () {
+       // chart.series[0].setData(chartData(table));
     //});
 				
 			
@@ -420,7 +419,10 @@ if(!function_exists('generatePageReports')){
     yAxis: {
         title: {
             text: 'Quiz Scores'
-        }
+        },
+		min:0,
+		max:100
+		
     },
        series: [{
         name: 'Quiz Scores',
@@ -867,16 +869,132 @@ function buildChartData(data){
 			break;
 		case 'groups':
 ?>	
+		<table id="testTable" class="display" style="width:100%">
+        <thead>
+            <tr>
+                <th>Group Name</th>
+                <th>Role</th>
+                <th>User Name</th>
+				<th>User ID</th>
+				<th>Email</th>
+            </tr>
+        </thead>
+    </table>		
+		
 		<script>
-		let sqlQuery_url = "<?php echo plugin_dir_url(__DIR__)?>"+ 'Assests/chartData/sqlGroupsQuery.php';
+			let sqlQuery = "<?php echo plugin_dir_url(__DIR__)?>"+ 'Assests/chartData/sqlGroupsQueryWithSiteSubquery.php';
+			
 				jQuery.ajax({
-        url: sqlQuery_url,
+        url: sqlQuery,
         method: 'GET'
     	}).done(function (data) {
 				let dataJson = JSON.parse(data);
-				console.log(dataJson);
-		});//end of ajax.Done
+				console.log(dataJson);	
+					
+				 var table = jQuery('#testTable').DataTable({
+        			dom: 'Pfrtip',
+					data: dataJson,
+					columns: [
+						{data: 'Group Name'},
+						{'render': function(data,type,full,meta){
+						let roleArray = full['Role'].split("_");
+						let roleName = roleArray[2];
+						let roleString = roleName.replace(/^./, roleName[0].toUpperCase()).slice(0,-1); 
+						return roleString;
+						}},
+						{data: 'User Name'},
+						{data: 'User ID'},
+						{data: 'Email'}
+						]
+    				});		
+				  // Create the chart with initial data
+    		var container = jQuery('<div/>').insertBefore(table.table().container());
+ 
+    		var chart = Highcharts.chart(container[0], {
+        		chart: {
+            		type: 'pie',
+        		},
+        		title: {
+            		text: 'User Groups',
+        		},
+        		series: [
+            		{
+                		data: chartData(table),
+            		},
+        		],
+    		});
+ 
+    	// On each draw, update the data in the chart
+    	table.on('draw', function () {
+        	chart.series[0].setData(chartData(table));
+    	});
+					
+					
+	});//end of Ajax Done
+			
+	function chartData(table) {
+    	var counts = {};
+ 
+    	// Count the number of entries for each position
+    	table
+        	.column(1, { search: 'applied' })
+        	.data()
+        	.each(function (val) {
+            	if (counts[val]) {
+                	counts[val] += 1;
+            	} else {
+                	counts[val] = 1;
+            	}
+        	});
+ 
+    	// And map it to the format highcharts uses
+    	return jQuery.map(counts, function (val, key) {
+        	return {
+            	name: key,
+            	y: val,
+        	};
+    	});
+	}
+			
+			
+			
+		/* ALTERNATIVE
+		let userList =[];
+		let sqlOuterQuery_url = "<?php //echo plugin_dir_url(__DIR__)?>"+ 'Assests/chartData/sqlGroupsOuterQuery.php';
+		let sqlGroupsQuery_url = "<?php// echo plugin_dir_url(__DIR__)?>"+ 'Assests/chartData/sqlGroupsQuery.php';
 		
+			
+				jQuery.ajax({
+        url: sqlOuterQuery_url,
+        method: 'GET'
+    	}).done(function (data) {
+				let dataJson = JSON.parse(data);
+				
+				//these users exist in site
+				userList = dataJson
+					.map(dataJson => dataJson['user_id'])
+					.filter((value,index,self) => self.indexOf(value) === index);
+				console.log(userList);
+				
+				jQuery.ajax({
+        			url: sqlGroupsQuery_url,
+        			method: 'GET'
+    				}).done(function (data) {	
+					let groupJson = JSON.parse(data);
+					console.log('groupjson',groupJson);
+					
+					jQuery.each(groupJson, function(i, val) {
+  						 if(groupJson[i]['ID'] in userList){ 
+      					console.log(groupJson[i]['ID']);
+					}
+					});
+					
+				});//end of ajax.Done(sqlGroupsQuery)
+					
+					
+					
+		});//end of ajax.Done (sqlOuterQuery)
+		*/
 		
 		
 		</script>
