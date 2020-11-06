@@ -290,7 +290,7 @@ if(!function_exists('generatePageReports')){
         <thead>
             <tr>
                 <th>User Name</th>
-                <th>Course ID</th>
+                <th>Course Name</th>
                 <th>Activity Status</th>
                 <th>Quiz Name</th>
                 <th>Quiz Score</th>
@@ -334,25 +334,48 @@ if(!function_exists('generatePageReports')){
 </style>
 		
 		
-		<script>
+<script>
 	let quizDict = {};
 	let quizNamesList = [];
-	let quizScoresList = [];			 
+	let quizScoresList = [];
+	let courseDict = {};
 			
-			let sqlTest_url = "<?php echo plugin_dir_url(__DIR__)?>"+ 'Assests/chartData/sqlTest.php';
+	let sqlCourseInSubsite_url = "<?php echo plugin_dir_url(__DIR__)?>"+ 'Assests/chartData/sqlCourseInSubsite.php';
+	jQuery.ajax({
+		url: sqlCourseInSubsite_url,
+        method: 'GET'
+	}).done(function (data){
+		let courseJson = JSON.parse(data);
+				
+		jQuery.each(courseJson,function(i,value){
+			if(courseJson[i]['Course ID'] in courseDict == false){ //If not found in dictionary, init
+				courseDict[courseJson[i]['Course ID']] = courseJson[i]['Course Name'];
+			}		
+		});
+				
+		
+	let sqlTest_url = "<?php echo plugin_dir_url(__DIR__)?>"+ 'Assests/chartData/sqlTest.php';
 				jQuery.ajax({
         url: sqlTest_url,
         method: 'GET'
     	}).done(function (data) {
 				let dataJson = JSON.parse(data);
-				
    // Create DataTable
     var table = jQuery('#testTable').DataTable({
         dom: 'Pfrtip',
 		data: dataJson,
 		columns: [
 			{data: 'User'},
-			{data: 'Course ID'},
+			{'render':function(data,type,full,meta){
+				let courseID = full['Course ID'];
+				if (courseID == 0){
+					return 'DELETED COURSE';
+				}
+				else{
+				return courseDict[courseID];
+				}
+			
+			}},
 				{'render': function(data,type,full,meta){
 				let compl ='';
 				(full['Activity Status']==1) ? compl = 'Completed': compl = 'Incomplete';
@@ -440,7 +463,12 @@ if(!function_exists('generatePageReports')){
     //});
 					
 					
-});//end of Ajax.Done
+});//end of Ajax.Done	
+		
+		
+	});//end of Ajax.Done for sqlCourseInSubsite 
+	
+			
  
 			
 			
@@ -1001,16 +1029,11 @@ function buildChartData(data){
 		<!--Remember to name the chart so can edit from there and do any style tag on top-->
 
 
-
 <?php
 			break;
       	default:
 ?>
-		<!--Remember to name the chart so can edit from there and do any style tag on top-->
-		
-		
-		
-		
+<!-- This is the all reports tab-->
 		
 		
 <?php
