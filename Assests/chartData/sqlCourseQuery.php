@@ -52,9 +52,8 @@ AND {$wpdb->prefix}learndash_user_activity.activity_status IS NULL
 AND {$wpdb->prefix}learndash_user_activity.activity_started != 0";
 }
 
-$statement = $connection->prepare($query);
-$statement->execute();
-$result = $statement->fetchAll();
+$result = $wpdb->get_results($wpdb->prepare($query));
+
 
 echo json_encode($result);
 	//END TEST//

@@ -2,7 +2,7 @@
 add_action( 'admin_menu','Report');
 if(!function_exists('Report')){
 	function Report(){
-		add_submenu_page( '','Reports', 'Reports', 'manage _options', 'reports', 'generatePageReports', 3);
+		add_dashboard_page( 'Reports', 'Reports', 'manage_options', 'reports', 'generatePageReports', 3);
 	}
 }
 
@@ -57,6 +57,7 @@ if(!function_exists('generatePageReports')){
                 <th>Month Registered</th>
                 <th>Display Name</th>
                 <th>User ID</th>
+				<th>Group</th>
             </tr>
         </thead>
     </table>		
@@ -97,6 +98,24 @@ if(!function_exists('generatePageReports')){
 }
 </style>
 		<script>
+			let groupsDict={};
+			
+			let sqlGroupsQuery_url = "<?php echo plugin_dir_url(__DIR__)?>"+ 'Assests/chartData/sqlGroupsQueryWithSiteSubquery.php';
+			jQuery.ajax({
+        		url: sqlGroupsQuery_url,
+        		method: 'GET'
+    		}).done(function (data) {
+				let groupJson = JSON.parse(data);
+					
+				jQuery.each(groupJson,function(i,value){
+					if(groupJson[i]['User Name'] in groupsDict == false){ //If not found in dictionary, init
+					groupsDict[groupJson[i]['User Name']] = [];
+					}
+				groupsDict[groupJson[i]['User Name']].push(groupJson[i]['Group Name']);	
+				});	
+			
+			
+			
 			let sqlCourseQuery_url = "<?php echo plugin_dir_url(__DIR__)?>"+ 'Assests/chartData/sqlCourseQuery.php';
 				jQuery.ajax({
         url: sqlCourseQuery_url,
@@ -107,7 +126,25 @@ if(!function_exists('generatePageReports')){
 					
 				//create the datatable
 				   var table = jQuery('#testTable').DataTable({
-        			dom: 'Pfrtip',
+        			dom: 'frtipP',
+					searchPanes:{
+		  				threshold: 1
+      				//columns: [ 1 ]
+    				},
+    				columnDefs: [
+      				{
+        			targets: 5,
+        			render: function (data, type, row) {
+          			if (type === 'sp') {
+            			return data.split(', ')
+          			}
+          			return data;
+        			},
+        			searchPanes: {
+          			orthogonal:'sp'
+        			}
+      				}
+    				],
 					data: dataJson,
 					columns: [
 						{data: 'Course ID'},
@@ -118,8 +155,18 @@ if(!function_exists('generatePageReports')){
 						return monthRegistered;
 						}},
 						{data: 'Display Name'},
-						{data: 'User ID'}
-					
+						{data: 'User ID'},
+							{'render':function(data,type,full,meta){
+								let userKey = full['Display Name'];
+				
+								if (userKey === null){
+									return 'N/A';
+								}else {
+								//if user doesnt exist in dictionary, return N/A
+								return !(userKey in groupsDict) ? 'N/A' : groupsDict[userKey];
+								}
+							},
+						}
 					]
     				});	
 					
@@ -252,7 +299,9 @@ if(!function_exists('generatePageReports')){
 				
 			
 				
-		}); // end of AjaxDone
+		}); // end of course AjaxDone
+				
+});//end of groups Ajax Done				
 			
 	function chartData(table) {
     var counts = {};
@@ -290,6 +339,7 @@ if(!function_exists('generatePageReports')){
         <thead>
             <tr>
                 <th>User Name</th>
+				<th>Group Name</th>
                 <th>Course Name</th>
                 <th>Activity Status</th>
                 <th>Quiz Name</th>
@@ -339,7 +389,24 @@ if(!function_exists('generatePageReports')){
 	let quizNamesList = [];
 	let quizScoresList = [];
 	let courseDict = {};
-			
+	let groupsDict = {};
+	
+	let sqlGroupsQuery_url = "<?php echo plugin_dir_url(__DIR__)?>"+ 'Assests/chartData/sqlGroupsQueryWithSiteSubquery.php';
+	jQuery.ajax({
+		url: sqlGroupsQuery_url,
+        method: 'GET'
+	}).done(function (data){
+	let groupJson = JSON.parse(data);
+	jQuery.each(groupJson,function(i,value){
+			if(groupJson[i]['User Name'] in groupsDict == false){ //If not found in dictionary, init
+				groupsDict[groupJson[i]['User Name']] = [];
+			}
+			groupsDict[groupJson[i]['User Name']].push(groupJson[i]['Group Name']);	
+		
+		});	
+		
+
+	
 	let sqlCourseInSubsite_url = "<?php echo plugin_dir_url(__DIR__)?>"+ 'Assests/chartData/sqlCourseInSubsite.php';
 	jQuery.ajax({
 		url: sqlCourseInSubsite_url,
@@ -362,10 +429,44 @@ if(!function_exists('generatePageReports')){
 				let dataJson = JSON.parse(data);
    // Create DataTable
     var table = jQuery('#testTable').DataTable({
-        dom: 'Pfrtip',
+        dom: 'frtipP',
+		 searchPanes:{
+      threshold: 1
+      //columns: [ 1 ]
+    },
+    
+    columnDefs: [
+      {
+        targets: 1,
+        render: function (data, type, row) {
+          if (type === 'sp') {
+            return data.split(', ')
+          }
+          return data;
+        },
+        searchPanes: {
+          orthogonal:'sp'
+        }
+      }
+    ],
 		data: dataJson,
 		columns: [
 			{data: 'User'},
+			{'render':function(data,type,full,meta){
+				let userKey = full['User'];
+				
+				if (userKey === null){
+				return 'N/A';
+				}else {
+				//if user doesnt exist in dictionary, return N/A
+				
+				return !(userKey in groupsDict) ? 'N/A' : groupsDict[userKey];
+				
+				}
+			},
+			 
+			 
+			},
 			{'render':function(data,type,full,meta){
 				let courseID = full['Course ID'];
 				if (courseID == 0){
@@ -468,6 +569,7 @@ if(!function_exists('generatePageReports')){
 		
 	});//end of Ajax.Done for sqlCourseInSubsite 
 	
+			}); // end of Groups Ajax Done()
 			
  
 			
@@ -653,6 +755,7 @@ function buildChartData(data){
                 <th>Month Registered</th>
                 <th>Display Name</th>
                 <th>User ID</th>
+				<th>Group</th>
             </tr>
         </thead>
     </table>		
@@ -692,6 +795,25 @@ function buildChartData(data){
 }
 </style>
 		<script>
+			let groupsDict = {};
+			
+			let sqlGroupQuery_url = "<?php echo plugin_dir_url(__DIR__)?>"+ 'Assests/chartData/sqlGroupsQueryWithSiteSubquery.php';
+				jQuery.ajax({
+        url: sqlGroupQuery_url,
+        method: 'GET'
+    	}).done(function (data) {
+		let groupJson = JSON.parse(data);		
+					
+		jQuery.each(groupJson,function(i,value){
+			if(groupJson[i]['User Name'] in groupsDict == false){ //If not found in dictionary, init
+				groupsDict[groupJson[i]['User Name']] = [];
+			}
+			groupsDict[groupJson[i]['User Name']].push(groupJson[i]['Group Name']);	
+		
+		});				
+		
+			
+			
 			let sqlCourseQuery_url = "<?php echo plugin_dir_url(__DIR__)?>"+ 'Assests/chartData/sqlCourseQuery.php';
 				jQuery.ajax({
         url: sqlCourseQuery_url,
@@ -700,7 +822,25 @@ function buildChartData(data){
 				let dataJson = JSON.parse(data);
 			
 				   var table = jQuery('#testTable').DataTable({
-        			dom: 'Pfrtip',
+        			dom: 'frtipP',
+					   searchPanes:{
+		  				threshold: 1
+      				//columns: [ 1 ]
+    				},
+    				columnDefs: [
+      				{
+        			targets: 5,
+        			render: function (data, type, row) {
+          			if (type === 'sp') {
+            			return data.split(', ')
+          			}
+          			return data;
+        			},
+        			searchPanes: {
+          			orthogonal:'sp'
+        			}
+      				}
+    				],
 					data: dataJson,
 					columns: [
 						{data: 'Course ID'},
@@ -710,7 +850,18 @@ function buildChartData(data){
 						return monthRegistered;
 						}},
 						{data: 'Display Name'},
-						{data: 'User ID'}
+						{data: 'User ID'},
+							{'render':function(data,type,full,meta){
+								let userKey = full['Display Name'];
+				
+								if (userKey === null){
+									return 'N/A';
+								}else {
+								//if user doesnt exist in dictionary, return N/A
+								return !(userKey in groupsDict) ? 'N/A' : groupsDict[userKey];
+								}
+							},
+						}
 						]
     				});	
 				
@@ -834,7 +985,10 @@ function buildChartData(data){
     //    chart.series[0].setData(chartData(table));
     //});
 				
-		}); // end of AjaxDone
+		}); // end of Courses Ajax Done()
+					
+
+		}); // end of Groups Ajax Done()					
 			
 			function chartData(table) {
     var counts = {};
@@ -897,6 +1051,7 @@ function buildChartData(data){
 			break;
 		case 'groups':
 ?>	
+		
 		<table id="testTable" class="display" style="width:100%">
         <thead>
             <tr>
@@ -910,6 +1065,8 @@ function buildChartData(data){
     </table>		
 		
 		<script>
+			window.addEventListener('load', (event) => {
+			
 			let sqlQuery = "<?php echo plugin_dir_url(__DIR__)?>"+ 'Assests/chartData/sqlGroupsQueryWithSiteSubquery.php';
 			
 				jQuery.ajax({
@@ -920,7 +1077,7 @@ function buildChartData(data){
 				console.log(dataJson);	
 					
 				 var table = jQuery('#testTable').DataTable({
-        			dom: 'Pfrtip',
+        			dom: 'frtipP',
 					data: dataJson,
 					columns: [
 						{data: 'Group Name'},
@@ -1025,6 +1182,7 @@ function buildChartData(data){
 		*/
 		
 		
+});//end of window.onload
 		</script>
 		<!--Remember to name the chart so can edit from there and do any style tag on top-->
 
