@@ -3,8 +3,22 @@ require_once('Page/overview.php');
 require_once('Page/Reports.php');
 
 function wp_load_dataTables() {
+	//wp_enqueue_style( 'teest1', plugin_dir_url( __FILE__ ).'Assests/dataTables/bootstrap.css', array(), '1.0.0', false);
+	//wp_enqueue_style( 'test2', plugin_dir_url( __FILE__ ).'Assests/dataTables/dataTables.bootstrap4.min.css', array(), '1.0.0', false );
+	wp_enqueue_style( 'dataTables-jQuery-CSS', plugin_dir_url( __FILE__ ).'Assests/dataTables/jquery.dataTables.min.css');
+	wp_enqueue_style( 'dataTables-buttons-CSS', plugin_dir_url( __FILE__ ).'Assests/dataTables/buttons.dataTables.min.css' );
+	wp_enqueue_style( 'dataTables-searchPanes-CSS', plugin_dir_url( __FILE__ ).'Assests/dataTables/searchPanes.dataTables.min.css' );
+	wp_enqueue_style( 'dataTables-CSS', plugin_dir_url( __FILE__ ).'Assests/dataTables/select.dataTables.min.css' );
 	wp_enqueue_script( 'dataTables-jQuery',  plugin_dir_url( __FILE__ ).'Assests/dataTables/jquery-3.5.1.js', array(), '1.0.0', false );
 	wp_enqueue_script( 'dataTables-JS',  plugin_dir_url( __FILE__ ).'Assests/dataTables/jquery.dataTables.min.js', array(), '1.0.0', false );
+	//wp_enqueue_script( 'test3',  plugin_dir_url( __FILE__ ).'Assests/dataTables/dataTables.bootstrap4.min.js', array(), '1.0.0', false );
+	wp_enqueue_script('dataTables-buttons', plugin_dir_url( __FILE__ ).'Assests/dataTables/dataTables.buttons.min.js', array(), '1.0.0', false );
+	wp_enqueue_script('dataTables-buttonsflash', plugin_dir_url( __FILE__ ).'Assests/dataTables/buttons.flash.min.js', array(), '1.0.0', false );
+	wp_enqueue_script('dataTables-jszip', plugin_dir_url( __FILE__ ).'Assests/dataTables/jszip.min.js', array(), '1.0.0', false );
+	wp_enqueue_script('dataTables-pdfmake', plugin_dir_url( __FILE__ ).'Assests/dataTables/pdfmake.min.js', array(), '1.0.0', false );
+	wp_enqueue_script('dataTables-vfsfonts', plugin_dir_url( __FILE__ ).'Assests/dataTables/vfs_fonts.js', array(), '1.0.0', false );
+	wp_enqueue_script('dataTables-buttonshtml5', plugin_dir_url( __FILE__ ).'Assests/dataTables/buttons.html5.min.js', array(), '1.0.0', false );
+	wp_enqueue_script('dataTables-buttonsprint', plugin_dir_url( __FILE__ ).'Assests/dataTables/buttons.print.min.js', array(), '1.0.0', false );
 	wp_enqueue_script( 'dataTables-searchPanes',plugin_dir_url( __FILE__ ).'Assests/dataTables/dataTables.searchPanes.min.js', array(), '1.0.0', 	false );
 	wp_enqueue_script( 'dataTables-select',  plugin_dir_url( __FILE__ ).'Assests/dataTables/dataTables.select.min.js', array(), '1.0.0', false );
 	wp_enqueue_script( 'highCharts',  plugin_dir_url( __FILE__ ).'Assests/highCharts/highcharts.js', array(), '1.0.0', false );
@@ -15,9 +29,6 @@ function wp_load_dataTables() {
 	wp_enqueue_script( 'highCharts-exporting',  plugin_dir_url( __FILE__ ).'Assests/highCharts/exporting.js', array(), '1.0.0', false );
 	wp_enqueue_script( 'highCharts-export-data',  plugin_dir_url( __FILE__ ).'Assests/highCharts/export-data.js', array(), '1.0.0', false );
 	wp_enqueue_script( 'highCharts-accessibility',  plugin_dir_url( __FILE__ ).'Assests/highCharts/accessibility.js', array(), '1.0.0', false );
-	wp_enqueue_style( 'dataTables-jQuery-CSS', plugin_dir_url( __FILE__ ).'Assests/dataTables/jquery.dataTables.min.css');
-	wp_enqueue_style( 'dataTables-searchPanes-CSS', plugin_dir_url( __FILE__ ).'Assests/dataTables/searchPanes.dataTables.min.css' );
-	wp_enqueue_style( 'dataTables-CSS', plugin_dir_url( __FILE__ ).'Assests/dataTables/select.dataTables.min.css' );
 }
 add_action( 'admin_enqueue_scripts', 'wp_load_dataTables' );
 
