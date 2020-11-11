@@ -70,6 +70,7 @@ if (!function_exists('generatePageReports')) {
             <div class="loader-section section-left"></div>
             <div class="loader-section section-right"></div>
         </div>
+		
         <table id="courseTable" class="display" style="width:100%">
             <thead>
                 <tr>
@@ -83,6 +84,10 @@ if (!function_exists('generatePageReports')) {
             </thead>
         </table>
         <style>
+			.dataTables_wrapper{
+			padding-top:1em;
+			}
+			
 			h1{
 			display:grid;
 			align-items:center;
@@ -202,7 +207,7 @@ if (!function_exists('generatePageReports')) {
 }
 
 input:checked + .switch-left {
-  background-color: #0084d0;
+  background-color: #2E8B57;
   color: #fff;
   bottom: 0px;
   left: 0.5em;
@@ -539,7 +544,10 @@ input:checked:focus + .switch-left + .switch-right {
 
                     //create the datatable
                     var courseTable = jQuery('#courseTable').DataTable({
-                        dom: 'Pfrtip',
+                        dom: 'PBfrtip',
+						buttons:[
+							'copyHtml5', 'csvHtml5', 'excelHtml5', 'pdfHtml5','print'
+						],
                         searchPanes: {
                             threshold: 1
                             //columns: [ 1 ]
@@ -687,7 +695,8 @@ input:checked:focus + .switch-left + .switch-right {
 
                     var container = jQuery('<div/>').insertBefore(courseTable.table()
                     .container());
-
+					
+					
                     var courseChart = Highcharts.chart(container[0], {
                         chart: {
                             type: 'area'
@@ -800,6 +809,10 @@ input:checked:focus + .switch-left + .switch-right {
             </thead>
         </table>
         <style>
+				.dataTables_wrapper{
+			padding-top:1em;
+			}
+			
 			h1{
 			display:grid;
 			align-items:center;
@@ -919,7 +932,7 @@ input:checked:focus + .switch-left + .switch-right {
 }
 
 input:checked + .switch-left {
-  background-color: #0084d0;
+  background-color: #2E8B57;
   color: #fff;
   bottom: 0px;
   left: 0.5em;
@@ -1321,7 +1334,10 @@ input:checked:focus + .switch-left + .switch-right {
                         let dataJson = JSON.parse(data);
                         // Create DataTable
                         var quizTable = jQuery('#quizTable').DataTable({
-                            dom: 'Pfrtip',
+                            dom: 'PBfrtip',
+							buttons:[
+							'copyHtml5', 'csvHtml5', 'excelHtml5', 'pdfHtml5','print'
+							],
                             searchPanes: {
                                 threshold: 1
                                 //columns: [ 1 ]
@@ -1694,6 +1710,10 @@ input:checked:focus + .switch-left + .switch-right {
         </table>
 		
         <style>
+				.dataTables_wrapper{
+			padding-top:1em;
+			}
+			
 			h1{
 			display:grid;
 			align-items:center;
@@ -1813,7 +1833,7 @@ input:checked:focus + .switch-left + .switch-right {
 }
 
 input:checked + .switch-left {
-  background-color: #0084d0;
+  background-color: #2E8B57;
   color: #fff;
   bottom: 0px;
   left: 0.5em;
@@ -2152,7 +2172,10 @@ input:checked:focus + .switch-left + .switch-right {
                     let dataJson = JSON.parse(data);
 
                     var userTable = jQuery('#userTable').DataTable({
-                        dom: 'Pfrtip',
+                        dom: 'PBfrtip',
+						buttons:[
+							'copyHtml5', 'csvHtml5', 'excelHtml5', 'pdfHtml5','print'
+						],
                         searchPanes: {
                             threshold: 1
                             //columns: [ 1 ]
@@ -2432,6 +2455,10 @@ input:checked:focus + .switch-left + .switch-right {
             </thead>
         </table>
         <style>
+				.dataTables_wrapper{
+			padding-top:1em;
+			}
+			
 			h1{
 			display:grid;
 			align-items:center;
@@ -2551,7 +2578,7 @@ input:checked:focus + .switch-left + .switch-right {
 }
 
 input:checked + .switch-left {
-  background-color: #0084d0;
+  background-color: #2E8B57;
   color: #fff;
   bottom: 0px;
   left: 0.5em;
@@ -2827,7 +2854,10 @@ input:checked:focus + .switch-left + .switch-right {
                 console.log(dataJson);
 
                 var groupsTable = jQuery('#groupsTable').DataTable({
-                    dom: 'Pfrtip',
+                    dom: 'PBfrtip',
+					buttons:[
+							'copyHtml5', 'csvHtml5', 'excelHtml5', 'pdfHtml5','print'
+						],
                     data: dataJson,
                     columns: [{
                             data: 'Group Name'
@@ -2961,8 +2991,7 @@ input:checked:focus + .switch-left + .switch-right {
 							break;
 						default:
 						?>
-        <!-- This is the all reports tab-->
-        <div id="loader-wrapper">
+       <div id="loader-wrapper">
             <div id="loader"></div>
             <div class="loader-section section-left"></div>
             <div class="loader-section section-right"></div>
@@ -2981,7 +3010,17 @@ input:checked:focus + .switch-left + .switch-right {
     		<div id="fourthContainer" class="column"></div>
 		</figure>
 	</div>
-	
+	 <table id="groupsTable" class="display" style="display:none;">
+            <thead>
+                <tr>
+                    <th>Group Name</th>
+                    <th>Role</th>
+                    <th>User Name</th>
+                    <th>User ID</th>
+                    <th>Email</th>
+                </tr>
+            </thead>
+        </table>
 		
         <style>
 			*, *:before, *:after {
@@ -3383,270 +3422,716 @@ input:checked:focus + .switch-left + .switch-right {
         </style>
         <script>
         window.addEventListener('load', (event) => {
+
+			loadCourseGraph();
+			loadQuizGraph();
+			loadUserGraph();
+			loadGroupGraph();
 			
-			//firstContainer
-			Highcharts.chart('firstContainer', {
-    chart: {
-        plotBackgroundColor: null,
-        plotBorderWidth: null,
-        plotShadow: false,
-        type: 'pie'
-    },
-    title: {
-        text: 'Browser market shares in January, 2018'
-    },
-    tooltip: {
-        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-    },
-    accessibility: {
-        point: {
-            valueSuffix: '%'
-        }
-    },
-    plotOptions: {
-        pie: {
-            allowPointSelect: true,
-            cursor: 'pointer',
-            dataLabels: {
-                enabled: true,
-                format: '<b>{point.name}</b>: {point.percentage:.1f} %'
-            }
-        }
-    },
-    series: [{
-        name: 'Brands',
-        colorByPoint: true,
-        data: [{
-            name: 'Chrome',
-            y: 61.41,
-            sliced: true,
-            selected: true
-        }, {
-            name: 'Internet Explorer',
-            y: 11.84
-        }, {
-            name: 'Firefox',
-            y: 10.85
-        }, {
-            name: 'Edge',
-            y: 4.67
-        }, {
-            name: 'Safari',
-            y: 4.18
-        }, {
-            name: 'Sogou Explorer',
-            y: 1.64
-        }, {
-            name: 'Opera',
-            y: 1.6
-        }, {
-            name: 'QQ',
-            y: 1.2
-        }, {
-            name: 'Other',
-            y: 2.61
-        }]
-    }]
-});
-			//second container
-			Highcharts.chart('secondContainer', {
-    chart: {
-        plotBackgroundColor: null,
-        plotBorderWidth: null,
-        plotShadow: false,
-        type: 'pie'
-    },
-    title: {
-        text: 'Browser market shares in January, 2018'
-    },
-    tooltip: {
-        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-    },
-    accessibility: {
-        point: {
-            valueSuffix: '%'
-        }
-    },
-    plotOptions: {
-        pie: {
-            allowPointSelect: true,
-            cursor: 'pointer',
-            dataLabels: {
-                enabled: true,
-                format: '<b>{point.name}</b>: {point.percentage:.1f} %'
-            }
-        }
-    },
-    series: [{
-        name: 'Brands',
-        colorByPoint: true,
-        data: [{
-            name: 'Chrome',
-            y: 61.41,
-            sliced: true,
-            selected: true
-        }, {
-            name: 'Internet Explorer',
-            y: 11.84
-        }, {
-            name: 'Firefox',
-            y: 10.85
-        }, {
-            name: 'Edge',
-            y: 4.67
-        }, {
-            name: 'Safari',
-            y: 4.18
-        }, {
-            name: 'Sogou Explorer',
-            y: 1.64
-        }, {
-            name: 'Opera',
-            y: 1.6
-        }, {
-            name: 'QQ',
-            y: 1.2
-        }, {
-            name: 'Other',
-            y: 2.61
-        }]
-    }]
-});
-			//third container
-			Highcharts.chart('thirdContainer', {
-    chart: {
-        plotBackgroundColor: null,
-        plotBorderWidth: null,
-        plotShadow: false,
-        type: 'pie'
-    },
-    title: {
-        text: 'Browser market shares in January, 2018'
-    },
-    tooltip: {
-        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-    },
-    accessibility: {
-        point: {
-            valueSuffix: '%'
-        }
-    },
-    plotOptions: {
-        pie: {
-            allowPointSelect: true,
-            cursor: 'pointer',
-            dataLabels: {
-                enabled: true,
-                format: '<b>{point.name}</b>: {point.percentage:.1f} %'
-            }
-        }
-    },
-    series: [{
-        name: 'Brands',
-        colorByPoint: true,
-        data: [{
-            name: 'Chrome',
-            y: 61.41,
-            sliced: true,
-            selected: true
-        }, {
-            name: 'Internet Explorer',
-            y: 11.84
-        }, {
-            name: 'Firefox',
-            y: 10.85
-        }, {
-            name: 'Edge',
-            y: 4.67
-        }, {
-            name: 'Safari',
-            y: 4.18
-        }, {
-            name: 'Sogou Explorer',
-            y: 1.64
-        }, {
-            name: 'Opera',
-            y: 1.6
-        }, {
-            name: 'QQ',
-            y: 1.2
-        }, {
-            name: 'Other',
-            y: 2.61
-        }]
-    }]
-});
-			//fourthContainer
-Highcharts.chart('fourthContainer', {
-    chart: {
-        plotBackgroundColor: null,
-        plotBorderWidth: null,
-        plotShadow: false,
-        type: 'pie'
-    },
-    title: {
-        text: 'Browser market shares in January, 2018'
-    },
-    tooltip: {
-        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-    },
-    accessibility: {
-        point: {
-            valueSuffix: '%'
-        }
-    },
-    plotOptions: {
-        pie: {
-            allowPointSelect: true,
-            cursor: 'pointer',
-            dataLabels: {
-                enabled: true,
-                format: '<b>{point.name}</b>: {point.percentage:.1f} %'
-            }
-        }
-    },
-    series: [{
-        name: 'Brands',
-        colorByPoint: true,
-        data: [{
-            name: 'Chrome',
-            y: 61.41,
-            sliced: true,
-            selected: true
-        }, {
-            name: 'Internet Explorer',
-            y: 11.84
-        }, {
-            name: 'Firefox',
-            y: 10.85
-        }, {
-            name: 'Edge',
-            y: 4.67
-        }, {
-            name: 'Safari',
-            y: 4.18
-        }, {
-            name: 'Sogou Explorer',
-            y: 1.64
-        }, {
-            name: 'Opera',
-            y: 1.6
-        }, {
-            name: 'QQ',
-            y: 1.2
-        }, {
-            name: 'Other',
-            y: 2.61
-        }]
-    }]
-});
+			function loadCourseGraph(){
+				let groupsDict = {};
+
+	let sqlGroupsQuery_url = "<?php echo plugin_dir_url(__DIR__) ?>" +
+	'Assests/chartData/sqlGroupsQueryWithSiteSubquery.php';
+	jQuery.ajax({
+	url: sqlGroupsQuery_url,
+	method: 'GET'
+}).done(function(data) {
+	let groupJson = JSON.parse(data);
+
+	jQuery.each(groupJson, function(i, value) {
+		if (groupJson[i]['User Name'] in groupsDict ==
+			false) { //If not found in dictionary, init
+			groupsDict[groupJson[i]['User Name']] = [];
+		}
+		groupsDict[groupJson[i]['User Name']].push(groupJson[i]['Group Name']);
+	});
+
+
+
+	let sqlCourseQuery_url = "<?php echo plugin_dir_url(__DIR__) ?>" +
+		'Assests/chartData/sqlCourseQuery.php';
+	jQuery.ajax({
+		url: sqlCourseQuery_url,
+		method: 'GET'
+	}).done(function(data) {
+		//Parse the data
+		let dataJson = JSON.parse(data);
+
+		//map the array and filter out unique dates
+		var unique_dates_string = dataJson
+			.map(dataJson => dataJson['Date Registered'])
+			.filter((value, index, self) => self.indexOf(value) === index);
+
+		//convert array of strings to Number
+		let unique_dates_numeric = Array.from(unique_dates_string, Number);
+
+		//sort the array numerically
+		let unique_dates_sorted = unique_dates_numeric.sort((a, b) => a - b);
+
+		//Find the min dates using spread 
+		let minDate = Math.min(...unique_dates_sorted);
+		let minDateString = minDate.toString();
+
+		let todaysDate = new Date();
+		let todaysYearString = todaysDate.getFullYear().toString();
+		let todaysMonthString = (todaysDate.getMonth() + 1).toString();
+		let currentDateInt = parseInt(todaysYearString.concat(todaysMonthString));
+		let currentDateString = currentDateInt.toString();
+		//let currentYearString = currentDateString.slice(0, 4);
+		//let currentMonthString = currentDateString.slice(4, 6);
+
+		let inputStartDateRange = [minDateString.slice(0, 4), '-', minDateString
+			.slice(4)
+		].join('');
+		let inputCurrentDateRange = [currentDateString.slice(0, 4), '-',
+			currentDateString.slice(4)
+		].join('');
+
+		let dateList = dateRange(inputStartDateRange, inputCurrentDateRange);
+
+		//This function returns an array containing YYYY-MM between the start date and end date inclusive
+		function dateRange(startDate, endDate) {
+			var start = startDate.split('-');
+			var end = endDate.split('-');
+			var startYear = parseInt(start[0]);
+			var endYear = parseInt(end[0]);
+			var dates = [];
+
+			for (var i = startYear; i <= endYear; i++) {
+				var endMonth = i != endYear ? 11 : parseInt(end[1]) - 1;
+				var startMon = i === startYear ? parseInt(start[1]) - 1 : 0;
+				for (var j = startMon; j <= endMonth; j = j > 12 ? j % 12 || 11 :
+					j + 1) {
+					var month = j + 1;
+					var displayMonth = month < 10 ? '0' + month : month;
+					dates.push([i, displayMonth].join('-'));
+				}
+			}
+			return dates;
+		} //end of date Range function
+
+
+
+		let courseDict = {};
+		let courseList = [];
+		let dateDict = {};
+
+		jQuery.each(dataJson, function(i, value) {
+			if (dataJson[i]['Course Name'] in courseDict == false) {
+				courseDict[dataJson[i]['Course Name']] = new Array(dateList
+					.length).fill(0);
+			}
+
+			let rawDate = dataJson[i]['Date Registered'];
+			let formattedDate = [rawDate.slice(0, 4), '-', rawDate.slice(4)]
+				.join('');
+			let arrIndex = dateList.indexOf(formattedDate);
+			courseDict[dataJson[i]['Course Name']][arrIndex]++;
+
+		}); //end of jQuery.each
+
+		courseDatasets = [];
+		for (key in courseDict) {
+			//reduce function to accumulate the numbers in the array
+			let result = courseDict[key].reduce(function(r, a) {
+				r.push((r.length && r[r.length - 1] || 0) + a);
+				return r;
+			}, []);
+
+			let newDataset = {
+				name: key,
+				data: result
+			};
+			courseDatasets.push(newDataset);
+		}
+
+		var courseChart = Highcharts.chart('secondContainer', {
+			chart: {
+				type: 'area'
+			},
+			title: {
+				text: 'Course Population by Month'
+			},
+			subtitle: {
+				text: 'Subtitle'
+			},
+			xAxis: {
+				categories: dateList,
+				tickmarkPlacement: 'on',
+				title: {
+					enabled: false
+				}
+			},
+			yAxis: {
+				title: {
+					text: 'No. Of Users'
+				},
+			},
+			tooltip: {
+				split: true,
+			},
+			plotOptions: {
+				area: {
+					stacking: 'normal',
+					lineColor: '#666666',
+					lineWidth: 1,
+					marker: {
+						lineWidth: 1,
+						lineColor: '#666666'
+					}
+				}
+			},
+			series: courseDatasets
+		});
+		// On each draw, update the data in the chart
+		//table.on('draw', function () {
+		// chart.series[0].setData(chartData(table));
+		//});
+		
+	}); // end of course AjaxDone
+
+	}); //end of groups Ajax Done
+	}//end of loadCourseGraph()
 			
-            //cover loader
-			jQuery('.mid').hide();
-            jQuery('body').addClass('loaded');
-            jQuery('h1').css('color', '#222222');
+			function loadQuizGraph(){
+			 let quizDict = {};
+            let quizNamesList = [];
+            let quizScoresList = [];
+            let courseDict = {};
+            let groupsDict = {};
+
+            let sqlGroupsQuery_url = "<?php echo plugin_dir_url(__DIR__) ?>" +
+                'Assests/chartData/sqlGroupsQueryWithSiteSubquery.php';
+            jQuery.ajax({
+                url: sqlGroupsQuery_url,
+                method: 'GET'
+            }).done(function(data) {
+                let groupJson = JSON.parse(data);
+                jQuery.each(groupJson, function(i, value) {
+                    if (groupJson[i]['User Name'] in groupsDict ==
+                        false) { //If not found in dictionary, init
+                        groupsDict[groupJson[i]['User Name']] = [];
+                    }
+                    groupsDict[groupJson[i]['User Name']].push(groupJson[i]['Group Name']);
+
+                });
+
+
+
+                let sqlCourseInSubsite_url = "<?php echo plugin_dir_url(__DIR__) ?>" +
+                    'Assests/chartData/sqlCourseInSubsite.php';
+                jQuery.ajax({
+                    url: sqlCourseInSubsite_url,
+                    method: 'GET'
+                }).done(function(data) {
+                    let courseJson = JSON.parse(data);
+
+                    jQuery.each(courseJson, function(i, value) {
+                        if (courseJson[i]['Course ID'] in courseDict ==
+                            false) { //If not found in dictionary, init
+                            courseDict[courseJson[i]['Course ID']] = courseJson[i][
+                                'Course Name'
+                            ];
+                        }
+                    });
+
+
+                    let sqlTest_url = "<?php echo plugin_dir_url(__DIR__) ?>" +
+                        'Assests/chartData/sqlTest.php';
+                    jQuery.ajax({
+                        url: sqlTest_url,
+                        method: 'GET'
+                    }).done(function(data) {
+                        let dataJson = JSON.parse(data);
+
+                        //shape the data (chart)
+                        jQuery.each(dataJson, function(i, value) {
+                            if (dataJson[i]['Activity Status'] ==
+                                1) { //Loop thru completed quizzes
+                                if (dataJson[i]['Quiz Name'] in quizDict ==
+                                    false
+                                    ) { //If not found in dictionary, initialzie it
+                                    quizDict[dataJson[i]['Quiz Name']] =
+                                        new Array(0);
+                                }
+                                quizDict[dataJson[i]['Quiz Name']].push(
+                                    dataJson[i]['Quiz Score']
+                                    ); //Add quiz score to array
+                            }
+                        });
+
+                        for (key in quizDict) {
+                            //convert array of strings to Number
+                            let quizScores = Array.from(quizDict[key], Number);
+
+                            //sort the array numerically
+                            let sortedQuizScores = quizScores.sort((a, b) => a - b);
+
+                            quizDict[key] = buildChartData(sortedQuizScores);
+                            quizNamesList.push(key);
+                            quizScoresList.push(quizDict[key]);
+
+                            quizNamesList.push("test"); //test data
+                            quizScoresList.push([40, 45, 70, 80, 90]); //test data
+
+                            quizNamesList.push("test test"); //test data
+                            quizScoresList.push([25, 55, 75, 80, 85]); //test data
+                        }
+
+                        var quizChart = Highcharts.chart('thirdContainer', {
+                            chart: {
+                                type: 'boxplot',
+                            },
+                            title: {
+                                text: 'Quiz Results',
+                            },
+                            legend: {
+                                enabled: false
+                            },
+                            xAxis: {
+                                categories: quizNamesList,
+                                title: {
+                                    text: 'Quiz'
+                                }
+                            },
+                            yAxis: {
+                                title: {
+                                    text: 'Quiz Scores'
+                                },
+                                min: 0,
+                                max: 100
+
+                            },
+                            series: [{
+                                name: 'Quiz Scores',
+                                data: quizScoresList,
+                                tooltip: {
+                                    headerFormat: '<em>Quiz No {point.key}</em><br/>'
+                                }
+                            }]
+                        });
+
+                    }); //end of Ajax.Done	
+
+
+                }); //end of Ajax.Done for sqlCourseInSubsite 
+
+            }); // end of Groups Ajax Done()
+
+            //THIS SECTION BELOW CONTAINS FORMULA FOR BOXPLOT
+            //DO NOT TOUCH
+            //#########################################################################
+            const standardDeviation = (arr, usePopulation = false) => {
+                const mean = arr.reduce((acc, val) => acc + val, 0) / arr.length;
+                return Math.sqrt(
+                    arr
+                    .reduce((acc, val) => acc.concat((val - mean) ** 2), [])
+                    .reduce((acc, val) => acc + val, 0) /
+                    (arr.length - (usePopulation ? 0 : 1))
+                );
+            };
+
+
+            function MinOfArray(data) {
+                return Math.min(...data);
+            }
+
+            function MaxOfArray(data) {
+                return Math.max(...data);
+            }
+
+            function Median(data) {
+                return Quartile_50(data);
+            }
+
+            function Quartile_25(data) {
+                return Quartile(data, 0.25);
+            }
+
+            function Quartile_50(data) {
+                return Quartile(data, 0.5);
+            }
+
+            function Quartile_75(data) {
+                return Quartile(data, 0.75);
+            }
+
+            function Quartile(data, q) {
+                data = Array_Sort_Numbers(data);
+                var pos = ((data.length) - 1) * q;
+                var base = Math.floor(pos);
+                var rest = pos - base;
+                if ((data[base + 1] !== undefined)) {
+                    return data[base] + rest * (data[base + 1] - data[base]);
+                } else {
+                    return data[base];
+                }
+            }
+
+            function Array_Sort_Numbers(inputarray) {
+                return inputarray.sort(function(a, b) {
+                    return a - b;
+                });
+            }
+
+            function Array_Sum(t) {
+                return t.reduce(function(a, b) {
+                    return a + b;
+                }, 0);
+            }
+
+            function Array_Average(data) {
+                return Array_Sum(data) / data.length;
+            }
+
+            function Array_Stdev(tab) {
+                var i, j, total = 0,
+                    mean = 0,
+                    diffSqredArr = [];
+                for (i = 0; i < tab.length; i += 1) {
+                    total += tab[i];
+                }
+                mean = total / tab.length;
+                for (j = 0; j < tab.length; j += 1) {
+                    diffSqredArr.push(Math.pow((tab[j] - mean), 2));
+                }
+                return (Math.sqrt(diffSqredArr.reduce(function(firstEl, nextEl) {
+                    return firstEl + nextEl;
+                }) / tab.length));
+            }
+            //#########################################################################
+
+            //This function returns an array of chart data, to accommodate for situations where there are < 5 data points. 
+            function buildChartData(data) {
+                var chartReadyData = new Array(5).fill();
+                var valMin, valMax, val50, val25, val75 = 0;
+                switch (data.length) {
+                    case 1:
+                        chartReadyData.fill(data[0]);
+                        return chartReadyData;
+                    case 2:
+                        /*valMin = MinOfArray(data);
+                        valMax = MaxOfArray(data);
+                        val50 = (valMax + valMin) * 0.5;
+                        val25 = (val50 + valMin) * 0.5;
+                        val75 = (val50 + valMax) * 0.5;*/
+                        valMin = MinOfArray(data);
+                        valMax = MaxOfArray(data);
+                        val50 = Quartile_50(data);
+                        val25 = Quartile_25(data);
+                        val75 = Quartile_75(data);
+                        chartReadyData = [valMin, val25, val50, val75, valMax];
+                        return chartReadyData;
+                    case 3:
+                        /*valMin = MinOfArray(data);
+             valMax = MaxOfArray(data);
+			 val50 = data[1];
+			 val25 = (val50 + valMin) * 0.5;
+			 val75 = (val50 + valMax) * 0.5;*/
+                        valMin = MinOfArray(data);
+                        valMax = MaxOfArray(data);
+                        val50 = Quartile_50(data);
+                        val25 = Quartile_25(data);
+                        val75 = Quartile_75(data);
+                        chartReadyData = [valMin, val25, val50, val75, valMax];
+                        return chartReadyData;
+
+                    case 4:
+                        /*valMin = MinOfArray(data);
+                        valMax = MaxOfArray(data);
+                        val50 = (data[1] + data[2]) * 0.5;
+                        val25 = (val50 + valMin) * 0.5;
+                        val75 = (val50 + valMax) * 0.5;*/
+                        valMin = MinOfArray(data);
+                        valMax = MaxOfArray(data);
+                        val50 = Quartile_50(data);
+                        val25 = Quartile_25(data);
+                        val75 = Quartile_75(data);
+                        chartReadyData = [valMin, val25, val50, val75, valMax];
+                        return chartReadyData;
+                    default:
+                        valMin = MinOfArray(data);
+                        valMax = MaxOfArray(data);
+                        val50 = Quartile_50(data);
+                        val25 = Quartile_25(data);
+                        val75 = Quartile_75(data);
+                        chartReadyData = [valMin, val25, val50, val75, valMax];
+                        return chartReadyData;
+                }
+
+            }
+		
+}//end of loadQuizGraph				
+
+
+function loadUserGraph(){
+let groupsDict = {};
+
+            let sqlGroupQuery_url = "<?php echo plugin_dir_url(__DIR__) ?>" +
+                'Assests/chartData/sqlGroupsQueryWithSiteSubquery.php';
+            jQuery.ajax({
+                url: sqlGroupQuery_url,
+                method: 'GET'
+            }).done(function(data) {
+                let groupJson = JSON.parse(data);
+
+                jQuery.each(groupJson, function(i, value) {
+                    if (groupJson[i]['User Name'] in groupsDict ==
+                        false) { //If not found in dictionary, init
+                        groupsDict[groupJson[i]['User Name']] = [];
+                    }
+                    groupsDict[groupJson[i]['User Name']].push(groupJson[i]['Group Name']);
+
+                });
+
+
+
+                let sqlCourseQuery_url = "<?php echo plugin_dir_url(__DIR__) ?>" +
+                    'Assests/chartData/sqlCourseQuery.php';
+                jQuery.ajax({
+                    url: sqlCourseQuery_url,
+                    method: 'GET'
+                }).done(function(data) {
+                    let dataJson = JSON.parse(data);
+
+                    //map the array and filter out unique dates
+                    var unique_dates_string = dataJson
+                        .map(dataJson => dataJson['Date Registered'])
+                        .filter((value, index, self) => self.indexOf(value) === index);
+
+                    //convert array of strings to Number
+                    let unique_dates_numeric = Array.from(unique_dates_string, Number);
+
+                    //sort the array numerically
+                    let unique_dates_sorted = unique_dates_numeric.sort((a, b) => a - b);
+
+                    //Find the min dates using spread 
+                    let minDate = Math.min(...unique_dates_sorted);
+                    let minDateString = minDate.toString();
+
+                    let todaysDate = new Date();
+                    let todaysYearString = todaysDate.getFullYear().toString();
+                    let todaysMonthString = (todaysDate.getMonth() + 1).toString();
+                    let currentDateInt = parseInt(todaysYearString.concat(todaysMonthString));
+                    let currentDateString = currentDateInt.toString();
+                    //let currentYearString = currentDateString.slice(0, 4);
+                    //let currentMonthString = currentDateString.slice(4, 6);
+
+                    let inputStartDateRange = [minDateString.slice(0, 4), '-', minDateString
+                        .slice(4)
+                    ].join('');
+                    let inputCurrentDateRange = [currentDateString.slice(0, 4), '-',
+                        currentDateString.slice(4)
+                    ].join('');
+
+                    let dateList = dateRange(inputStartDateRange, inputCurrentDateRange);
+
+                    //This function returns an array containing YYYY-MM between the start date and end date inclusive
+                    function dateRange(startDate, endDate) {
+                        var start = startDate.split('-');
+                        var end = endDate.split('-');
+                        var startYear = parseInt(start[0]);
+                        var endYear = parseInt(end[0]);
+                        var dates = [];
+
+                        for (var i = startYear; i <= endYear; i++) {
+                            var endMonth = i != endYear ? 11 : parseInt(end[1]) - 1;
+                            var startMon = i === startYear ? parseInt(start[1]) - 1 : 0;
+                            for (var j = startMon; j <= endMonth; j = j > 12 ? j % 12 || 11 :
+                                j + 1) {
+                                var month = j + 1;
+                                var displayMonth = month < 10 ? '0' + month : month;
+                                dates.push([i, displayMonth].join('-'));
+                            }
+                        }
+                        return dates;
+                    }
+
+                    let courseDict = {};
+                    let courseList = [];
+                    let dateDict = {};
+
+                    jQuery.each(dataJson, function(i, value) {
+                        if (dataJson[i]['Course Name'] in courseDict == false) {
+                            courseDict[dataJson[i]['Course Name']] = new Array(dateList
+                                .length).fill(0);
+                        }
+
+                        let rawDate = dataJson[i]['Date Registered'];
+                        let formattedDate = [rawDate.slice(0, 4), '-', rawDate.slice(4)]
+                            .join('');
+                        let arrIndex = dateList.indexOf(formattedDate);
+                        courseDict[dataJson[i]['Course Name']][arrIndex]++;
+
+                    }); //end of jQuery.each
+
+                    courseDatasets = [];
+                    for (key in courseDict) {
+                        let newDataset = {
+                            name: key,
+                            data: courseDict[key]
+                        };
+                        courseDatasets.push(newDataset);
+                    }
+
+                    // Create the chart with initial data
+                    var userChart = Highcharts.chart('firstContainer', {
+                        chart: {
+                            type: 'area'
+                        },
+                        title: {
+                            text: 'Users Registered in Courses By Month'
+                        },
+                        subtitle: {
+                            text: 'Subtitle'
+                        },
+                        xAxis: {
+                            categories: dateList,
+                            tickmarkPlacement: 'on',
+                            title: {
+                                enabled: false
+                            }
+                        },
+                        yAxis: {
+                            title: {
+                                text: 'No. Of Users'
+                            },
+                        },
+                        tooltip: {
+                            split: true,
+                        },
+                        plotOptions: {
+                            area: {
+                                stacking: 'normal',
+                                lineColor: '#666666',
+                                lineWidth: 1,
+                                marker: {
+                                    lineWidth: 1,
+                                    lineColor: '#666666'
+                                }
+                            }
+                        },
+                        series: courseDatasets
+                    });
+
+                }); // end of Courses Ajax Done()
+
+
+            }); // end of Groups Ajax Done()					
+				
+}//end of loadUserGraph			
+
+function loadGroupGraph(){
+	
+  let sqlQuery = "<?php echo plugin_dir_url(__DIR__) ?>" +
+                'Assests/chartData/sqlGroupsQueryWithSiteSubquery.php';
+
+            jQuery.ajax({
+                url: sqlQuery,
+                method: 'GET'
+            }).done(function(data) {
+                let dataJson = JSON.parse(data);
+				
+                let sqlQuery = "<?php echo plugin_dir_url(__DIR__) ?>" +
+                'Assests/chartData/sqlGroupsQueryWithSiteSubquery.php';
+
+            jQuery.ajax({
+                url: sqlQuery,
+                method: 'GET'
+            }).done(function(data) {
+                let dataJson = JSON.parse(data);
+				
+                var groupsTable = jQuery('#groupsTable').DataTable({
+                    dom: 'Pfrtip',
+                    data: dataJson,
+                    columns: [{
+                            data: 'Group Name'
+                        },
+                        {
+                            'render': function(data, type, full, meta) {
+                                let roleArray = full['Role'].split("_");
+                                let roleName = roleArray[2];
+                                let roleString = roleName.replace(/^./, roleName[0]
+                                    .toUpperCase()).slice(0, -1);
+                                return roleString;
+                            }
+                        },
+                        {
+                            data: 'User Name'
+                        },
+                        {
+                            data: 'User ID'
+                        },
+                        {
+                            data: 'Email'
+                        }
+                    ]
+                });
+				jQuery('#groupsTable_wrapper').hide();
+				jQuery('.dtsp-panesContainer').hide();
+				
+                var groupsChart = Highcharts.chart('fourthContainer', {
+                    chart: {
+                        type: 'pie',
+						 events: {
+							 //this is a callback function, to load the page once the last graph is complete. It removes the pre-loading animation.
+            				load: function () {
+                					 //cover loader
+									jQuery('.mid').hide();
+            						jQuery('body').addClass('loaded');
+            						jQuery('h1').css('color', '#222222');
+									}
+            				}
+        				
+                    },
+                    title: {
+                        text: 'User Groups',
+                    },
+                    series: [{
+                        data: chartData(groupsTable),
+                    }, ],
+                });
+		
+                // On each draw, update the data in the chart
+                groupsTable.on('draw', function() {
+                    groupsChart.series[0].setData(chartData(groupsTable));
+                });
+				
+            }); //end of Ajax Done
+
 			
+            function chartData(table) {
+                var counts = {};
+
+                // Count the number of entries for each position
+                table
+                    .column(1, {
+                        search: 'applied'
+                    })
+                    .data()
+                    .each(function(val) {
+                        if (counts[val]) {
+                            counts[val] += 1;
+                        } else {
+                            counts[val] = 1;
+                        }
+                    });
+
+                 // And map it to the format highcharts uses
+        return jQuery.map(counts, function(val, key) {
+            return {
+                name: key,
+                y: val,
+            };
         });
+    }
+        
+});
+
+}//end of loadGroupGraph
+			
+});
         </script>
 
 
