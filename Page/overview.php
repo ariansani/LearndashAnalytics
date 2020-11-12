@@ -1,7 +1,4 @@
 <?php 
-
-
-
 add_action('admin_menu','add_dashboard');
 if(!function_exists('add_dashboard')){
 	function add_dashboard(){
@@ -39,7 +36,96 @@ if(!function_exists('generatePageOverview')){
 	body {
   		font-family: Arial, Helvetica, sans-serif;
 	}
+	
+	
+	/*THIS IS CARD STYLING*/
+	
+.container{
+  position: relative;
+  height: 100%;
+  width: 100%;
+	left:10%;
+  display: flex;
+}
 
+	.holder{
+		margin-left: 25%;
+    	margin-top: 45%;
+  		text-align: center;
+	}
+
+
+.card {
+  display: flex;
+  height: 280px;
+  width: 280px;
+  background-color: #FFFFFF;
+  border-radius: 10px;
+  box-shadow: 1rem 1em 3rem #666;
+/*   margin-left: -50px; */
+  transition: 0.4s ease-out;
+  position: relative;
+  left: 0px;
+}
+
+.card:not(:first-child) {
+    margin-left: -50px;
+}
+
+.card:hover {
+  transform: translateY(-20px);
+  transition: 0.4s ease-out;
+}
+
+.card:hover ~ .card {
+  position: relative;
+  left: 50px;
+  transition: 0.4s ease-out;
+}
+
+.title {
+  color: black;
+  font-weight: 300;
+  font-size:2em;
+  position: absolute;
+  left: 20px;
+  top: 15px;
+}
+
+.bar {
+  position: absolute;
+  top: 80px;
+  left: 20px;
+  height: 5px;
+  width: 220px;
+background-color: #2e3033;
+	padding:0px;
+	margin-bottom:0px;
+}
+
+.emptybar {
+  background-color: #2e3033;
+  width: 100%;
+  height: 100%;
+}
+
+.filledbar {
+  position: absolute;
+  top: 0px;
+  z-index: 3;
+  width: 0px;
+  height: 100%;
+  background: rgb(0,154,217);
+  background: linear-gradient(90deg, rgba(0,154,217,1) 0%, rgba(217,147,0,1) 65%, rgba(255,186,0,1) 100%);
+  transition: 0.6s ease-out;
+}
+
+.card:hover .filledbar {
+  width: 220px;
+  transition: 0.4s ease-out;
+}
+/*END OF CARD STYLING	*/
+	
 	.column {
   		float: left;
   		width: 25%;
@@ -47,8 +133,8 @@ if(!function_exists('generatePageOverview')){
 	}
 
 
-	.row {margin: 0 -5px;}
-
+	/*.row {margin: 0 -5px;}
+*/
 	.row:after {
   		content: "";
   		display: table;
@@ -78,7 +164,7 @@ if(!function_exists('generatePageOverview')){
 	}
 
 
-	.card {
+	.card2 {
   		box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
   		padding: 16px;
   		text-align: center;
@@ -86,10 +172,10 @@ if(!function_exists('generatePageOverview')){
 	}
 	
 	button {
-		background-color: #4CAF50;
+		background-color: #52708a;
 		font-size:12px;
 		border-radius: 12px;
-		border: 2px solid #4CAF50;
+		border: 2px solid #52708a;
 		height:35px;
 		border-radius: 4px;
   		color: #FFFFFF;
@@ -124,415 +210,132 @@ if(!function_exists('generatePageOverview')){
 	}
 	
 	.dashicons{
-	    height: 70px;
+	    height: 60px;
     	font-size: 5em;
     	margin-left: -50px;
 		
 	}
 	
-	
-	
 </style>
-<h2 >Here is an overview of the reports</h2>
 
-<div class="row">
-  <div class="column">
-    <div class="card">
-    	<span class="dashicons dashicons-admin-users" height="700" width="700"></span>
-      	<p><?php echo $value_of_users; echo $value_of_users > "1" ? " Users" : " User"; ?></p>
-      	
-    </div>
-  </div>
-	
-  <div class="column">
-    <div class="card">
-      <span class="dashicons dashicons-media-code"></span>
-      <p><?php echo $value_of_course; echo $value_of_course > "1" ? " Number of Courses" : " Number of Course";?></p>
-    
-    </div>
-  </div>
-  
-  <div class="column">
-    <div class="card">
-      <span class="dashicons dashicons-backup"></span>
-      <p><?php echo $value_of_quiz; echo $value_of_quiz > "1" ? " Quizzes" : " Quiz"; ?></p>
-     
-    </div>
-  </div>
-  
-  <div class="column">
-    <div class="card">
-      <span class="dashicons dashicons-groups"></span>
-      <p><?php echo $value_of_groups; echo $value_of_groups > "1" ? " Number of Groups" : " Number of Group" ?></p>
-    </div>
-  </div>
-</div>
-<br>
 
-<head>
-	<title>Horizontal Bar Chart</title>
-	
-	<style>
-	canvas {
-		-moz-user-select: none;
-		-webkit-user-select: none;
-		-ms-user-select: none;
-	}
-	</style>
-</head>
 
-	<body>
-	
-		<!--START OF USER CHART-->
-		<!--<div id="container" style="width: 50%; display:inline-block; float:left;">
-		<canvas id="courseChart"></canvas>
-		</div>
-		<div style ="width:50%; float:right;height:425px;"> 
-		</div>
-		<script>
-		let courseList = [];
-		let courseCount = [];
-			
-				jQuery.ajax({
-        url: "<?php// echo plugin_dir_url(__DIR__).'Assests/chartData/sqlQuery_GetCoursesBISA.php'; ?>" ,
-        method: 'GET'
-    	}).done(function (data) {
-				var dataJson = JSON.parse(data);
-				jQuery.each(dataJson,function(i,value){
-				courseList.push(dataJson[i]['Course Title']);
-				});
-				
-				courseCount = new Array(courseList.length).fill(0);
-				
-				jQuery.ajax({
-					url: "<?php// echo plugin_dir_url(__DIR__).'Assests/chartData/sqlQuery.php'; ?>",
-					method:'GET'
-				}).done(function(data){
-					var userJson = JSON.parse(data);
-					
-					jQuery.each(userJson,function(i,value){
-					let courseName = userJson[i]['Course Name'];
-					let arrIndex = courseList.indexOf(courseName);
-					courseCount[arrIndex]++;
-					});
-					
-					
-					var courseChart = new Chart(document.getElementById('courseChart'),{
-					type:'horizontalBar',
-					data:{
-					labels: courseList,
-					datasets:[{
-                			label: 'No. Of Users',
-                		backgroundColor: 'rgba(75, 192, 192, 0.4)',
-						data: courseCount,
-						borderWidth: 1
-            		}]
-				},
-				options: {	
-					legend:{
-						onClick: function(e, legendItem) {
-          		var index = legendItem.datasetIndex;
-          		var ci = this.chart;
-          		var alreadyHidden = (ci.getDatasetMeta(index).hidden === null) ? false : ci.getDatasetMeta(index).hidden;       
-          		var anyOthersAlreadyHidden = false;
-          		var allOthersHidden = true;
 
-          		// figure out the current state of the labels
-          		ci.data.datasets.forEach(function(e, i) {
-            		var meta = ci.getDatasetMeta(i);
-            
-            		if (i !== index) {
-              		if (meta.hidden) {
-                		anyOthersAlreadyHidden = true;
-              		} else {
-                		allOthersHidden = false;
-              		}
-            		}
-          		});
-          
-          		// if the label we clicked is already hidden 
-          		// then we now want to unhide (with any others already unhidden)
-          		if (alreadyHidden) {
-            		ci.getDatasetMeta(index).hidden = null;
-          		} else { 
-            		// otherwise, lets figure out how to toggle visibility based upon the current state
-            		ci.data.datasets.forEach(function(e, i) {
-              			var meta = ci.getDatasetMeta(i);
 
-              		if (i !== index) {
-                		// handles logic when we click on visible hidden label and there is currently at least
-                		// one other label that is visible and at least one other label already hidden
-                		// (we want to keep those already hidden still hidden)
-                		if (anyOthersAlreadyHidden && !allOthersHidden) {
-                  		meta.hidden = true;
-                		} else {
-                  		// toggle visibility
-                  		meta.hidden = meta.hidden === null ? !meta.hidden : null;
-                		}
-              		} else {
-                		meta.hidden = null;
-              		}
-            		});
-          		}
 
-          		ci.update();
-        		},
-					},
-            		title: {
-                		display: true,
-                		text: 'No. of Users Enrolled in Courses',
-						fontSize:10
-            		},
-            		tooltips: {
-                		mode: 'index',
-                		intersect: false
-            		},
-            		responsive: true,
-					scales:{
-					 xAxes: [{
-                            display: true,
-                            scaleLabel: {
-                                display: true
-                            },
-						 ticks:{
-						 stepSize : 1,
-					     beginAtZero: true,
-							 
-						 }
-                        }],
-                        yAxes: [{
-                            display: true,
-                            scaleLabel: {
-                                display: true
-                            },
-							ticks:{
-							 stepSize : 1,
-					     beginAtZero: true,
-							autoSkip: false,
-								fontSize: 7
-								
-								 
-							}
-                        }]
-					}
-        		}
-			});
-	});//end of Ajax Done(Users)							
-});//end of Ajax Done(BISA)
-
-			
-		
-		
-		
-		</script>-->
-		<!--END OF USER CHART-->
-	
-
-	<!--<span class="content" >
-		<div class="wrapper" style="width:50%; float:right;"><canvas id="chart-0"></canvas></div>
-	</span>-->
-	
-	<script>
-
-		/*window.onload = function() {
-			var ctx = document.getElementById('canvas').getContext('2d');
-			window.myHorizontalBar = new Chart(ctx, {
-				type: 'horizontalBar',
-				data: horizontalBarChartData,
-				options: {
-					// Elements options apply to all of the options unless overridden in a dataset
-					// In this case, we are setting the border of each horizontal bar to be 2px wide
-					elements: {
-						rectangle: {
-							borderWidth: 2,
-						}
-					},
-					responsive: true,
-					legend: {
-						position: 'right',
-					},
-					title: {
-						display: true,
-						text: 'Horizontal Bar Chart'
-					}
-				}
-			});
-
-		};
-
-		});
-		*/
-		
-	</script>
-		
-	<!--Here is another script for another chart-->	
-	<script>
-		var DATA_COUNT = 5;
-
-		var utils = Samples.utils;
-
-		utils.srand(110);
-
-		function colorize(opaque, hover, ctx) {
-			var v = ctx.dataset.data[ctx.dataIndex];
-			var c = v < -50 ? '#D60000'
-				: v < 0 ? '#F46300'
-				: v < 50 ? '#0358B6'
-				: '#44DE28';
-
-			var opacity = hover ? 1 - Math.abs(v / 150) - 0.2 : 1 - Math.abs(v / 150);
-
-			return opaque ? c : utils.transparentize(c, opacity);
-		}
-
-		function hoverColorize(ctx) {
-			return colorize(false, true, ctx);
-		}
-
-		function generateData() {
-			return utils.numbers({
-				count: DATA_COUNT,
-				min: -100,
-				max: 100
-			});
-		}
-
-		var data = {
-			datasets: [{
-				data: generateData(),
-			}]
-		};
-
-		var options = {
-			legend: false,
-			tooltips: false,
-			title: {
-						display: true,
-						text: 'Pie Chart'
-					},
-			elements: {
-				arc: {
-					backgroundColor: colorize.bind(null, false, false),
-					hoverBackgroundColor: hoverColorize
-				}
-			}
-		};
-
-		var chart = new Chart('chart-0', {
-			type: 'pie',
-			data: data,
-			options: options
-			
-		});
-
-		// eslint-disable-next-line no-unused-vars
-		function randomize() {
-			chart.data.datasets.forEach(function(dataset) {
-				dataset.data = generateData();
-			});
-			chart.update();
-		}
-
-		// eslint-disable-next-line no-unused-vars
-		function addDataset() {
-			chart.data.datasets.push({
-				data: generateData()
-			});
-			chart.update();
-		}
-
-		// eslint-disable-next-line no-unused-vars
-		function removeDataset() {
-			chart.data.datasets.shift();
-			chart.update();
-		}
-
-		// eslint-disable-next-line no-unused-vars
-		function togglePieDoughnut() {
-			if (chart.options.cutoutPercentage) {
-				chart.options.cutoutPercentage = 0;
-			} else {
-				chart.options.cutoutPercentage = 50;
-			}
-			chart.update();
-		}
-
-	</script>
-		
-	
-		
-</body>
 
 <h2 style="width:100%;display:block;">Here are the selection to view the reports accordingly.</h2>
 <h3 >For Learndash Analytics:</h3>
-
 <div class="row">
-  <div class="column">
-    <div class="card">
+	<div class="container">
+  <div class="card">
+    <h3 class="title">Users</h3>
+    <div class="bar">
+      <div class="emptybar"></div>
+      <div class="filledbar"></div>
+    </div>
+      	<div class="holder">
     	<span class="dashicons dashicons-admin-users" height="700" width="700"></span>
-      	<p class="text">If you want to know more about the reports of the users? <br> Click the button below to</p>
-      	<button onclick="window.location.href='?page=reports&tab=users'"><span>View the reports of Users</span></button>
+      	<p><?php echo $value_of_users; echo $value_of_users > "1" ? " Users" : " User"; ?></p>
+      	<button onclick="window.location.href='?page=reports&tab=users'"><span>View User Analytics</span></button>
     </div>
   </div>
-	
-  <div class="column">
-    <div class="card">
-      <span class="dashicons dashicons-media-code"></span>
-      <p class="text">If you want to know more about the reports of the courses? <br> Click the button below to</p>
-      <button onclick="window.location.href='?page=reports&tab=course'"><span>View the reports of Courses</span></button>
+		
+  <div class="card">
+    <h3 class="title">Courses</h3>
+    <div class="bar">
+      <div class="emptybar"></div>
+      <div class="filledbar"></div>
+    </div>
+  <div class="holder">
+    	 <span class="dashicons dashicons-media-code"></span>
+      	 <p><?php echo $value_of_course; echo $value_of_course > "1" ? " Courses" : " Course";?></p>
+    <button onclick="window.location.href='?page=reports&tab=course'"><span>View Course Analytics</span></button>
     </div>
   </div>
-  
-  <div class="column">
-    <div class="card">
+  <div class="card">
+    <h3 class="title">Quizzes</h3>
+    <div class="bar">
+      <div class="emptybar"></div>
+      <div class="filledbar"></div>
+    </div>
+   <div class="holder">
       <span class="dashicons dashicons-backup"></span>
-      <p class="text">If you want to know more about the reports of the quiz? <br> Click the button below to</p>
-      <button onclick="window.location.href='?page=reports&tab=Quiz'"><span>View the reports of Quiz</span></button>
+      <p><?php echo $value_of_quiz; echo $value_of_quiz > "1" ? " Quizzes" : " Quiz"; ?></p>
+       <button onclick="window.location.href='?page=reports&tab=Quiz'"><span>View Quiz Analytics</span></button>
     </div>
   </div>
-  
-  <div class="column">
-    <div class="card">
-      <span class="dashicons dashicons-groups"></span>
-      <p class="text">If you want to know more about the reports of the groups? <br> Click the button below to</p>
-      <button onclick="window.location.href='?page=reports&tab=groups'"><span>View the reports of Groups</span></button>
+  <div class="card">
+    <h3 class="title">Groups</h3>
+    <div class="bar">
+      <div class="emptybar"></div>
+      <div class="filledbar"></div>
+    </div>
+	   <div class="holder">
+    <span class="dashicons dashicons-groups"></span>
+      <p><?php echo $value_of_groups; echo $value_of_groups > "1" ? " Groups" : " Group" ?></p>
+	<button onclick="window.location.href='?page=reports&tab=groups'"><span>View Groups Analytics</span></button>
     </div>
   </div>
 </div>
+</div>
 <br>
-<h3 >For Woocommerce Analytics:</h3>
+
+<h3>For WooCommerce Analytics:</h3>
 <div class="row">
-  <div class="column">
-    <div class="card">
-    	<h3>Placeholder for Image</h3>
-      	<p class="text">If you want to know more about the reports of the users? <br> Click the button below to</p>
-      	<button onclick="window.location.href='?page=reports&tab=users'"><span>View the reports of Users</span></button>
+	<div class="container">
+  <div class="card">
+    <h3 class="title">Sales Overview</h3>
+    <div class="bar">
+      <div class="emptybar"></div>
+      <div class="filledbar"></div>
+    </div>
+      	<div class="holder">
+    	<span class="dashicons dashicons-money" height="700" width="700"></span>
+			<p>Total Sales &amp; Orders</p>
+      	<button onclick="window.location.href='./admin.php?page=wc-admin'"><span>View Sales Analytics</span></button>
     </div>
   </div>
+		
+  <div class="card">
+    <h3 class="title">Orders</h3>
+    <div class="bar">
+      <div class="emptybar"></div>
+      <div class="filledbar"></div>
+    </div>
+  <div class="holder">
+    	 <span class="dashicons dashicons-welcome-write-blog"></span>
+	  <p>Order Status</p>
+    <button onclick="window.location.href='./edit.php?post_type=shop_order'"><span>View Orders</span></button>
+    </div>
+  </div>
+  <div class="card">
+    <h3 class="title">Customers</h3>
+    <div class="bar">
+      <div class="emptybar"></div>
+      <div class="filledbar"></div>
+    </div>
+   <div class="holder">
+      <span class="dashicons dashicons-id-alt"></span>
+	   <p>Spending &amp; Info</p>
+       <button onclick="window.location.href='./admin.php?page=wc-admin&path=%2Fcustomers'"><span>View Customer Data</span></button>
+    </div>
+  </div>
+  <div class="card">
+    <h3 class="title">Reports</h3>
+    <div class="bar">
+      <div class="emptybar"></div>
+      <div class="filledbar"></div>
+    </div>
+	   <div class="holder">
+    <span class="dashicons dashicons-chart-line"></span>
+		   <p>Export Sales Data</p>
+	<button onclick="window.location.href='./admin.php?page=wc-reports'"><span>View Reports</span></button>
+    </div>
+  </div>
+ 
+</div>
 	
-  <div class="column">
-    <div class="card">
-      <h3>Placeholder for Image</h3>
-      <p class="text">If you want to know more about the reports of the courses? <br> Click the button below to</p>
-      <button onclick="window.location.href='?page=reports&tab=course'"><span>View the reports of Courses</span></button>
-    </div>
-  </div>
-  
-  <div class="column">
-    <div class="card">
-      <h3>Placeholder for Image</h3>
-      <p class="text">If you want to know more about the reports of the quiz? <br> Click the button below to</p>
-      <button onclick="window.location.href='?page=reports&tab=Quiz'"><span>View the reports of Quiz</span></button>
-    </div>
-  </div>
-  
-  <div class="column">
-    <div class="card">
-      <h3>Placeholder for Image</h3>
-      <p class="text">If you want to know more about the reports of the groups? <br> Click the button below to</p>
-      <button onclick="window.location.href='?page=reports&tab=groups'"><span>View the reports of Groups</span></button>
-    </div>
-  </div>
 </div>
 
 <?php	

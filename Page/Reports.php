@@ -1441,11 +1441,12 @@ input:checked:focus + .switch-left + .switch-right {
                             quizNamesList.push(key);
                             quizScoresList.push(quizDict[key]);
 
-                            quizNamesList.push("test"); //test data
+                            /*quizNamesList.push("test"); //test data
                             quizScoresList.push([40, 45, 70, 80, 90]); //test data
 
                             quizNamesList.push("test test"); //test data
                             quizScoresList.push([25, 55, 75, 80, 85]); //test data
+							*/
                         }
 
 
@@ -3672,11 +3673,11 @@ input:checked:focus + .switch-left + .switch-right {
                             quizNamesList.push(key);
                             quizScoresList.push(quizDict[key]);
 
-                            quizNamesList.push("test"); //test data
-                            quizScoresList.push([40, 45, 70, 80, 90]); //test data
+                            //quizNamesList.push("test"); //test data
+                            //quizScoresList.push([40, 45, 70, 80, 90]); //test data
 
-                            quizNamesList.push("test test"); //test data
-                            quizScoresList.push([25, 55, 75, 80, 85]); //test data
+                            //quizNamesList.push("test test"); //test data
+                           // quizScoresList.push([25, 55, 75, 80, 85]); //test data
                         }
 
                         var quizChart = Highcharts.chart('thirdContainer', {
