@@ -43,7 +43,7 @@ if(!function_exists('generatePageOverview')){
 .container{
   position: relative;
   height: 100%;
-  width: 100%;
+  width: 80%;
 	left:10%;
   display: flex;
 }
@@ -116,7 +116,7 @@ background-color: #2e3033;
   width: 0px;
   height: 100%;
   background: rgb(0,154,217);
-  background: linear-gradient(90deg, rgba(0,154,217,1) 0%, rgba(217,147,0,1) 65%, rgba(255,186,0,1) 100%);
+  background: linear-gradient(90deg, rgba(0,154,217,1) 0%, rgba(230,222,0,1) 65%, rgba(255,255,0,1) 100%);
   transition: 0.6s ease-out;
 }
 
@@ -293,7 +293,7 @@ background-color: #2e3033;
       	<div class="holder">
     	<span class="dashicons dashicons-money" height="700" width="700"></span>
 			<p>Total Sales &amp; Orders</p>
-      	<button onclick="window.location.href='./admin.php?page=wc-admin'"><span>View Sales Analytics</span></button>
+				<button onclick="window.open('./admin.php?page=wc-admin','_blank')"><span>View Sales Analytics</span></button>
     </div>
   </div>
 		
@@ -306,7 +306,7 @@ background-color: #2e3033;
   <div class="holder">
     	 <span class="dashicons dashicons-welcome-write-blog"></span>
 	  <p>Order Status</p>
-    <button onclick="window.location.href='./edit.php?post_type=shop_order'"><span>View Orders</span></button>
+    <button onclick="window.open('./edit.php?post_type=shop_order','_blank')"><span>View Orders</span></button>
     </div>
   </div>
   <div class="card">
@@ -318,7 +318,7 @@ background-color: #2e3033;
    <div class="holder">
       <span class="dashicons dashicons-id-alt"></span>
 	   <p>Spending &amp; Info</p>
-       <button onclick="window.location.href='./admin.php?page=wc-admin&path=%2Fcustomers'"><span>View Customer Data</span></button>
+       <button onclick="window.open('./admin.php?page=wc-admin&path=%2Fcustomers','_blank')"><span>View Customer Data</span></button>
     </div>
   </div>
   <div class="card">
@@ -330,7 +330,7 @@ background-color: #2e3033;
 	   <div class="holder">
     <span class="dashicons dashicons-chart-line"></span>
 		   <p>Export Sales Data</p>
-	<button onclick="window.location.href='./admin.php?page=wc-reports'"><span>View Reports</span></button>
+	<button onclick="window.open('./admin.php?page=wc-reports','_blank')"><span>View Reports</span></button>
     </div>
   </div>
  
