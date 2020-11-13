@@ -26,6 +26,8 @@ if(!function_exists('generatePageOverview')){
 			$value_of_quiz = $wpdb->get_var($wpdb->prepare("SELECT DISTINCT COUNT(ID) FROM `{$wpdb->prefix}posts` WHERE post_status = 'publish' && post_type = 'sfwd-quiz'"));	
 			//For Groups
 			$value_of_groups = $wpdb->get_var($wpdb->prepare("SELECT DISTINCT COUNT(ID) FROM `{$wpdb->prefix}posts` WHERE post_status = 'publish' && post_type ='groups'"));	
+
+			
 ?>
 
 <style>
@@ -281,6 +283,17 @@ background-color: #2e3033;
 </div>
 <br>
 
+<?php 
+function products() {
+        return array_map('wc_get_product', get_posts(['post_type'=>'product','nopaging'=>true]));
+}
+			
+if (sizeof(products()) < 1){
+echo "<style>.wooCommerceBlock{display:none;}</style>";
+}
+			
+?>
+<div class="wooCommerceBlock">
 <h3>For WooCommerce Analytics:</h3>
 <div class="row">
 	<div class="container">
@@ -337,7 +350,7 @@ background-color: #2e3033;
 </div>
 	
 </div>
-
+</div>
 <?php	
 		}
 	}
