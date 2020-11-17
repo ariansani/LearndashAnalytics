@@ -547,7 +547,7 @@ if (!function_exists('generatePageReports')) {
                 }).done(function(data) {
                     //Parse the data
                     let dataJson = JSON.parse(data);
-
+					
                     //create the datatable
                     var courseTable = jQuery('#courseTable').DataTable({
                         dom: 'PBfrtip',

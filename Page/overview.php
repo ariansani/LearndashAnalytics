@@ -351,14 +351,7 @@ echo "<style>.wooCommerceBlock{display:none;}</style>";
 	
 </div>
 </div>
-<?php	
+<?php
 		}
 	}
 }
-
-
-
-
-
-
-
