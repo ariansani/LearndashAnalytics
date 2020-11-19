@@ -523,12 +523,12 @@ if (!function_exists('generatePageReports')) {
 
             let sqlGroupsQuery_url = "<?php echo plugin_dir_url(__DIR__) ?>" +
                 'Assests/chartData/sqlGroupsQueryWithSiteSubquery.php';
+			
             jQuery.ajax({
                 url: sqlGroupsQuery_url,
                 method: 'GET'
             }).done(function(data) {
                 let groupJson = JSON.parse(data);
-
                 jQuery.each(groupJson, function(i, value) {
                     if (groupJson[i]['User Name'] in groupsDict ==
                         false) { //If not found in dictionary, init
@@ -1364,6 +1364,8 @@ if (!function_exists('generatePageReports')) {
 
             let sqlGroupsQuery_url = "<?php echo plugin_dir_url(__DIR__) ?>" +
                 'Assests/chartData/sqlGroupsQueryWithSiteSubquery.php';
+			
+			console.log(sqlGroupsQuery_url);
             jQuery.ajax({
                 url: sqlGroupsQuery_url,
                 method: 'GET'
@@ -1405,6 +1407,7 @@ if (!function_exists('generatePageReports')) {
                         method: 'GET'
                     }).done(function(data) {
                         let dataJson = JSON.parse(data);
+						
                         // Create DataTable
                         var quizTable = jQuery('#quizTable').DataTable({
                             dom: 'PBfrtip',
@@ -1461,7 +1464,7 @@ if (!function_exists('generatePageReports')) {
                                         if (courseID == 0) {
                                             return 'DELETED COURSE';
                                         } else {
-                                            return courseDict[courseID];
+                                            return !(courseID in courseDict)? 'DELETED COURSE':courseDict[courseID];
                                         }
 
                                     }
@@ -2643,7 +2646,6 @@ if (!function_exists('generatePageReports')) {
 						?>
         <div id="loader-wrapper">
             <div id="loader"></div>
-
             <div class="loader-section section-left"></div>
             <div class="loader-section section-right"></div>
         </div>
@@ -2662,7 +2664,6 @@ if (!function_exists('generatePageReports')) {
         .dataTables_wrapper {
             padding-top: 1em;
         }
-
         h1 {
             display: grid;
             align-items: center;
@@ -3061,8 +3062,8 @@ if (!function_exists('generatePageReports')) {
                 method: 'GET'
             }).done(function(data) {
                 let dataJson = JSON.parse(data);
-                console.log(dataJson);
-
+				
+				console.log(dataJson);
                 var groupsTable = jQuery('#groupsTable').DataTable({
                     dom: 'PBfrtip',
                     buttons: [
@@ -3070,7 +3071,10 @@ if (!function_exists('generatePageReports')) {
                     ],
                     data: dataJson,
                     columns: [{
-                            data: 'Group Name'
+                             'render': function(data, type, full, meta) {
+                                let groupName = full['Group Name'];
+                                return (groupName != null && groupName != '') ? groupName : 'N/A';
+                            }
                         },
                         {
                             'render': function(data, type, full, meta) {
@@ -3078,17 +3082,26 @@ if (!function_exists('generatePageReports')) {
                                 let roleName = roleArray[2];
                                 let roleString = roleName.replace(/^./, roleName[0]
                                     .toUpperCase()).slice(0, -1);
-                                return roleString;
+                                return (roleString) ? roleString : 'N/A';
                             }
                         },
                         {
-                            data: 'User Name'
+                             'render': function(data, type, full, meta) {
+                                let userName = full['User Name'];
+                                return (userName != null && userName != '') ? userName : 'N/A';
+                            }
                         },
                         {
-                            data: 'User ID'
+                            'render': function(data, type, full, meta) {
+                                let userID = full['User ID'];
+                                return (userID != null && userID != '') ? userID : 'N/A';
+                            }
                         },
                         {
-                            data: 'Email'
+                           'render': function(data, type, full, meta) {
+                                let email = full['Email'];
+                                return (email != null && email != '') ? email : 'N/A';
+                            }
                         }
                     ]
                 });
