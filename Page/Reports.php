@@ -42,16 +42,16 @@ if (!function_exists('generatePageReports')) {
     <!-- Here are our tabs -->
     <nav class="nav-tab-wrapper">
         <a href="?page=reports"
-            class="nav-tab <?php if ($tab === null || $tab === "Reports") : ?> nav-tab-active disabledClick<?php endif; ?>">All
+            class="nav-tab<?php if($tab !==null|| $tab !=="Reports"):?> hideShow<?php endif;?> <?php if ($tab === null || $tab === "Reports") : ?> nav-tab-active disabledClick<?php endif; ?>">All
             Reports</a>
         <a href="?page=reports&tab=users"
-            class="nav-tab<?php if ($tab === "users") : ?> nav-tab-active disabledClick<?php endif; ?>">Users</a>
+            class="nav-tab <?php if($tab !== 'users'):?>hideShow<?php endif;?><?php if ($tab === 'users') : ?>nav-tab-active disabledClick<?php endif; ?>">Users</a>
         <a href="?page=reports&tab=course"
-            class="nav-tab<?php if ($tab === "course") : ?> nav-tab-active disabledClick<?php endif; ?>">Course</a>
+            class=" nav-tab <?php if ($tab !== 'course'):?> hideShow <?php endif;?>  <?php if ($tab === 'course') : ?>nav-tab nav-tab nav-tab-active disabledClick<?php endif; ?>">Course</a>
         <a href="?page=reports&tab=Quiz"
-            class="nav-tab<?php if ($tab === "Quiz") : ?> nav-tab-active disabledClick<?php endif; ?>">Quiz</a>
+            class="nav-tab <?php if($tab !== 'Quiz'):?> hideShow <?php endif; ?> <?php if ($tab === 'Quiz') : ?> nav-tab-active disabledClick<?php endif; ?>">Quiz</a>
         <a href="?page=reports&tab=groups"
-            class="nav-tab<?php if ($tab === "groups") : ?> nav-tab-active disabledClick<?php endif; ?>">Groups</a>
+            class="nav-tab <?php if($tab !=='groups'):?> hideShow <?php endif; ?><?php if ($tab === 'groups') : ?> nav-tab-active disabledClick<?php endif; ?>">Groups</a>
     </nav>
     <div class="tab-content">
         <?php
@@ -4474,7 +4474,13 @@ if (!function_exists('generatePageReports')) {
 </div>
 
 <?php
+			$user = wp_get_current_user();
+		if ( in_array( 'client-instructor', (array) $user->roles ) ) {
+		
+			echo "<style>.hideShow{display:none;}</style>";
+			}	
+						
+
 		}
 	}
 }
-?>

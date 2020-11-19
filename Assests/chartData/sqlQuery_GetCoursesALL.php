@@ -6,9 +6,7 @@ $connection = new PDO ('mysql:host=localhost;dbname=kqwest_dev1;charset=utf8;','
 $query = "SELECT id AS 'Course ID',post_title AS 'Course Title' FROM wp_posts WHERE post_type ='sfwd-courses' AND post_status ='publish'";
 
 
-$statement = $connection->prepare($query);
-$statement->execute();
-$result = $statement->fetchAll();
+$result = $wpdb->get_results($wpdb->prepare($query));
 
 echo json_encode($result);
 			
