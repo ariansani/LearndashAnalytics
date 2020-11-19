@@ -30,9 +30,7 @@ INNER JOIN `{$prefix}users` ON {$prefix}users`.ID = `{$wpdb->prefix}learndash_us
 WHERE `{$wpdb->prefix}learndash_user_activity.activity_type` = 'access' AND `{$wpdb->prefix}posts`.post_type='sfwd-courses' AND `{$wpdb->prefix}posts`.post_status='publish' AND `{$wpdb->prefix}learndash_user_activity`.activity_status IS NULL AND `{$wpdb->prefix}learndash_user_activity`.activity_started != 0";*/
 
 
-$statement = $connection->prepare($query);
-$statement->execute();
-$result = $statement->fetchAll();
+$result = $wpdb->get_results($wpdb->prepare($query));
 
 echo json_encode($result);
 	//END TEST//

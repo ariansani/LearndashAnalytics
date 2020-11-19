@@ -14,9 +14,7 @@ $query = "SELECT DISTINCT wp_posts.id AS 'Course ID', wp_posts.post_title AS 'Co
 	WHERE  wp_posts.post_type='sfwd-courses' 
 	AND wp_posts.post_status='publish'";
 
-$statement = $connection->prepare($query);
-$statement->execute();
-$result = $statement->fetchAll();
+$result = $wpdb->get_results($wpdb->prepare($query));
 
 echo json_encode($result);
 	//END TEST//

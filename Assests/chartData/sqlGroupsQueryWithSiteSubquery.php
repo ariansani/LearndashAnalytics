@@ -13,9 +13,7 @@ WHERE um.meta_value IN
 	WHERE post_status = 'publish' 
 	AND post_type = 'groups')";
 
-$statement = $connection->prepare($query);
-$statement->execute();
-$result = $statement->fetchAll();
+$result = $wpdb->get_results($wpdb->prepare($query));
 
 echo json_encode($result);
 	//END TEST//

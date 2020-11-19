@@ -220,12 +220,6 @@ background-color: #2e3033;
 	
 </style>
 
-
-
-
-
-
-
 <h2 style="width:100%;display:block;">Here are the selection to view the reports accordingly.</h2>
 <h3 >For Learndash Analytics:</h3>
 <div class="row">
@@ -239,7 +233,7 @@ background-color: #2e3033;
       	<div class="holder">
     	<span class="dashicons dashicons-admin-users" height="700" width="700"></span>
       	<p><?php echo $value_of_users; echo $value_of_users > "1" ? " Users" : " User"; ?></p>
-      	<button onclick="window.location.href='?page=reports&tab=users'"><span>View User Analytics</span></button>
+      	<button id="hideShow" onclick="window.location.href='?page=reports&tab=users'"><span>View User Analytics</span></button>
     </div>
   </div>
 		
@@ -252,7 +246,7 @@ background-color: #2e3033;
   <div class="holder">
     	 <span class="dashicons dashicons-media-code"></span>
       	 <p><?php echo $value_of_course; echo $value_of_course > "1" ? " Courses" : " Course";?></p>
-    <button onclick="window.location.href='?page=reports&tab=course'"><span>View Course Analytics</span></button>
+    <button  onclick="window.location.href='?page=reports&tab=course'"><span>View Course Analytics</span></button>
     </div>
   </div>
   <div class="card">
@@ -264,7 +258,7 @@ background-color: #2e3033;
    <div class="holder">
       <span class="dashicons dashicons-backup"></span>
       <p><?php echo $value_of_quiz; echo $value_of_quiz > "1" ? " Quizzes" : " Quiz"; ?></p>
-       <button onclick="window.location.href='?page=reports&tab=Quiz'"><span>View Quiz Analytics</span></button>
+       <button id="hideShow" onclick="window.location.href='?page=reports&tab=Quiz'"><span>View Quiz Analytics</span></button>
     </div>
   </div>
   <div class="card">
@@ -276,7 +270,7 @@ background-color: #2e3033;
 	   <div class="holder">
     <span class="dashicons dashicons-groups"></span>
       <p><?php echo $value_of_groups; echo $value_of_groups > "1" ? " Groups" : " Group" ?></p>
-	<button onclick="window.location.href='?page=reports&tab=groups'"><span>View Groups Analytics</span></button>
+	<button id="hideShow" onclick="window.location.href='?page=reports&tab=groups'"><span>View Groups Analytics</span></button>
     </div>
   </div>
 </div>
@@ -352,6 +346,13 @@ echo "<style>.wooCommerceBlock{display:none;}</style>";
 </div>
 </div>
 <?php
+		$user = wp_get_current_user();
+		if ( in_array( 'client-instructor', (array) $user->roles ) ) {
+		
+			echo "<style>#hideShow{display:none;}</style>";
+			}	
 		}
 	}
 }
+
+

@@ -6,9 +6,7 @@ global $wpdb;
 
 $query = "SELECT user_id FROM wp_usermeta where meta_key = '{$wpdb->prefix}capabilities'";
 
-$statement = $connection->prepare($query);
-$statement->execute();
-$result = $statement->fetchAll();
+$result = $wpdb->get_results($wpdb->prepare($query));
 
 echo json_encode($result);
 	//END TEST//
