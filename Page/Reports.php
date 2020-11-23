@@ -1365,7 +1365,6 @@ if (!function_exists('generatePageReports')) {
             let sqlGroupsQuery_url = "<?php echo plugin_dir_url(__DIR__) ?>" +
                 'Assests/chartData/sqlGroupsQueryWithSiteSubquery.php';
 			
-			console.log(sqlGroupsQuery_url);
             jQuery.ajax({
                 url: sqlGroupsQuery_url,
                 method: 'GET'
@@ -1393,9 +1392,7 @@ if (!function_exists('generatePageReports')) {
                     jQuery.each(courseJson, function(i, value) {
                         if (courseJson[i]['Course ID'] in courseDict ==
                             false) { //If not found in dictionary, init
-                            courseDict[courseJson[i]['Course ID']] = courseJson[i][
-                                'Course Name'
-                            ];
+                            courseDict[courseJson[i]['Course ID']] = courseJson[i]['Course Name'];
                         }
                     });
 
@@ -3063,7 +3060,6 @@ if (!function_exists('generatePageReports')) {
             }).done(function(data) {
                 let dataJson = JSON.parse(data);
 				
-				console.log(dataJson);
                 var groupsTable = jQuery('#groupsTable').DataTable({
                     dom: 'PBfrtip',
                     buttons: [
@@ -4416,6 +4412,7 @@ if (!function_exists('generatePageReports')) {
                         jQuery('#groupsTable_wrapper').hide();
                         jQuery('.dtsp-panesContainer').hide();
 
+						
                         var groupsChart = Highcharts.chart('fourthContainer', {
                             chart: {
                                 type: 'pie',
