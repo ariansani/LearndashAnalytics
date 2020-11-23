@@ -30,6 +30,7 @@ function wp_load_dataTables() {
 	wp_enqueue_script( 'highCharts-exporting',  plugin_dir_url( __FILE__ ).'Assests/highCharts/exporting.js', array(), '1.0.0', false );
 	wp_enqueue_script( 'highCharts-export-data',  plugin_dir_url( __FILE__ ).'Assests/highCharts/export-data.js', array(), '1.0.0', false );
 	wp_enqueue_script( 'highCharts-accessibility',  plugin_dir_url( __FILE__ ).'Assests/highCharts/accessibility.js', array(), '1.0.0', false );
+	wp_enqueue_script( 'highCharts-boost',  plugin_dir_url( __FILE__ ).'Assests/highCharts/boost.js', array(), '1.0.0', false );
 }
 add_action( 'admin_enqueue_scripts', 'wp_load_dataTables' );
 
